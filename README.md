@@ -1,9 +1,17 @@
-# WSIPRE
+# wsipre
 
-## <u>W</u>hole-<u>S</u>lide <u>I</u>mage <u>PRE</u>processing
+**W**hole-**S**lide **I**mage **PRE**processing
 
-`wsipre` is a wrapper of [Open Slide Python](https://github.com/openslide/openslide-python)
-providing slide annotation loading and slide preprocessing functionality.
+**wsipre** is a small Python package to handle whole-slide images (WSI; also
+known as virtual slides) with region-level annotations.
+
+**wsipre** can be installed from PyPI as shown below. For more detail check out
+the [docs](http://luisvalesilva.github.io/wsipre).
+
+```console
+pip install wsipre
+```
+
 
 ## License
 
