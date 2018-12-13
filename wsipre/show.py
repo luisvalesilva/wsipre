@@ -110,7 +110,7 @@ class Figure(object):
             ax.annotate(r, (cx, cy), color=font_color, weight='bold',
                         fontsize=font_size, ha='center', va='center')
 
-        ax.set_xlim((0, width * 4))
+        ax.set_xlim((0, width * len(rectangles)))
         ax.set_ylim((0, height))
         ax.set_aspect('equal')
         ax.axis('off')
