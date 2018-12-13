@@ -60,13 +60,13 @@ class _AnnotatedOpenSlide(openslide.OpenSlide):
 
         if self.annotation_filename is not None:
             if self.data_source == 'camelyon':
-                self.polygons, labels = reader.camelyon_annotations(
+                self.polygons, self.labels = reader.camelyon_annotations(
                     self.annotation_filename)
-                if 'metastases' in labels:
+                if 'metastases' in self.labels:
                     # Avoid value 0 (used by default for unlabeled regions)
                     self.label_map = {'metastases': 2, 'normal': 1}
                 # CAMELYON16 data
-                elif '_0' in labels or '_1' in labels:
+                elif '_0' in self.labels or '_1' in self.labels:
                     self.label_map = {'_0': 2, '_1': 2, '_2': 1}
                 else:  # Predicted annotations
                     self.label_map = {'predicted_tumor': 1}
@@ -74,7 +74,7 @@ class _AnnotatedOpenSlide(openslide.OpenSlide):
                 # Value 1 is reserved for 'normal' tissue annotations
                 self.label_map = {'Benign': 2, 'Carcinoma in situ': 3,
                                   'Invasive carcinoma': 4}
-                self.polygons, labels = reader.bach_annotations(
+                self.polygons, self.labels = reader.bach_annotations(
                     self.annotation_filename)
             else:
                 raise ValueError(
@@ -159,7 +159,7 @@ class Slide(_AnnotatedOpenSlide):
     def _draw_polygons(self, mask, polygons, polygon_type,
                        line_thickness=None):
         """Convert polygon vertex coordinates to polygon drawing."""
-        for poly, label in zip(polygons, self.label_map.keys()):
+        for poly, label in zip(polygons, self.labels):
             if polygon_type == 'line':
                 mask = cv2.polylines(mask, [poly], True,
                                      int(self.label_map[label]),
