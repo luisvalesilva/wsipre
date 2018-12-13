@@ -24,7 +24,7 @@ User guide
     :maxdepth: 1
 
     quick_intro.rst
-    Jupyter notebook demo <https://github.com/luisvalesilva/wsipre/demo.ipynb>
+    Jupyter notebook demo <https://github.com/luisvalesilva/wsipre/blob/master/demo.ipynb>
     beyondwsipre.rst
 
 
