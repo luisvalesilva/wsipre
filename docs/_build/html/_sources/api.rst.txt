@@ -1,0 +1,15 @@
+.. _api:
+
+API
+===
+
+.. module:: slide 
+
+This part of the documentation covers all the interfaces of **wsipre**.
+
+A Title
+------------------
+
+.. autoclass:: OpenSlide
+   :members:
+   :inherited-members:

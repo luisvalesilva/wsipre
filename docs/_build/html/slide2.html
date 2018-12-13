@@ -1,0 +1,452 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Slide &#8212; wsipre 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/better.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  </head><body>
+    <header id="pageheader"><h1><a href="index.html ">
+        wsipre 0.0.1 documentation
+    </a></h1></header>
+  <div class="related top">
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="index.html">wsipre 0.0.1 documentation</a></li> 
+    </ul>
+  </nav>
+  </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="module-slide">
+<span id="slide"></span><h1>Slide<a class="headerlink" href="#module-slide" title="Permalink to this headline">¶</a></h1>
+<dl class="class">
+<dt id="slide.OpenSlide">
+<em class="property">class </em><code class="descclassname">slide.</code><code class="descname">OpenSlide</code><span class="sig-paren">(</span><em>filename</em>, <em>annotation_filename=None</em>, <em>data_source=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#OpenSlide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide" title="Permalink to this definition">¶</a></dt>
+<dd><p>An open WSI, with or without annotations.</p>
+<p>Added functionality to OpenSlide WSI instances, optionally with
+annotations.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>filename: str</strong></dt>
+<dd><p class="first last">Path to slide file. Namesake argument to <cite>openslide.OpenSlide</cite> and
+<cite>AnnotatedOpenSlide</cite>.</p>
+</dd>
+<dt><strong>annotation_filename: str</strong></dt>
+<dd><p class="first last">Path to XML annotation file. Namesake argument to <cite>AnnotatedOpenSlide</cite>.</p>
+</dd>
+<dt><strong>data_source: str</strong></dt>
+<dd><p class="first last">The computational histology challenge releasing the dataset. Namesake
+argument to <cite>AnnotatedOpenSlide</cite>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span> <span class="nn">wsipre</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wsi</span> <span class="o">=</span> <span class="n">wsipre</span><span class="o">.</span><span class="n">OpenSlide</span><span class="p">(</span><span class="s1">&#39;tumor_001.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;tumor_001.xml&#39;</span><span class="p">,</span> <span class="s1">&#39;camelyon&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wsi</span><span class="o">.</span><span class="n">label_map</span>
+<span class="go">{&#39;_0&#39;: 2, &#39;_1&#39;: 2, &#39;_2&#39;: 1}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wsi</span><span class="o">.</span><span class="n">level_count</span>
+<span class="go">10</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">len</span><span class="p">(</span><span class="n">wsi</span><span class="o">.</span><span class="n">polygons</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">thumbnail</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">downsampling_factor</span> <span class="o">=</span> <span class="n">wsi</span><span class="o">.</span><span class="n">get_annotated_thumbnail</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">3000</span><span class="p">,</span> <span class="mi">3000</span><span class="p">),</span> <span class="n">polygon_type</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="n">line_thickness</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">slide_region</span> <span class="o">=</span> <span class="n">wsi</span><span class="o">.</span><span class="n">read_region</span><span class="p">(</span><span class="n">location</span><span class="o">=</span><span class="p">(</span><span class="mi">65000</span><span class="p">,</span> <span class="mi">110000</span><span class="p">),</span> <span class="n">level</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span>
+<span class="gp">... </span>                               <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
+</pre></div>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Attributes:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>.. todo:: Add attributes!</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Methods</p>
+<table border="1" class="longtable docutils">
+<colgroup>
+<col width="10%" />
+<col width="90%" />
+</colgroup>
+<tbody valign="top">
+<tr class="row-odd"><td><a class="reference internal" href="#slide.OpenSlide.close" title="slide.OpenSlide.close"><code class="xref py py-obj docutils literal notranslate"><span class="pre">close</span></code></a>()</td>
+<td>Close the OpenSlide object.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#slide.OpenSlide.detect_format" title="slide.OpenSlide.detect_format"><code class="xref py py-obj docutils literal notranslate"><span class="pre">detect_format</span></code></a>(filename)</td>
+<td>Return a string describing the format vendor of the specified file.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#slide.OpenSlide.get_annotated_thumbnail" title="slide.OpenSlide.get_annotated_thumbnail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_annotated_thumbnail</span></code></a>(size[,&nbsp;…])</td>
+<td>Convert WSI to a scaled-down thumbnail.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#slide.OpenSlide.get_best_level_for_downsample" title="slide.OpenSlide.get_best_level_for_downsample"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_best_level_for_downsample</span></code></a>(downsample)</td>
+<td>Return the best level for displaying the given downsample.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#slide.OpenSlide.get_thumbnail" title="slide.OpenSlide.get_thumbnail"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_thumbnail</span></code></a>(size)</td>
+<td>Return a PIL.Image containing an RGB thumbnail of the image.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#slide.OpenSlide.get_tissue_mask" title="slide.OpenSlide.get_tissue_mask"><code class="xref py py-obj docutils literal notranslate"><span class="pre">get_tissue_mask</span></code></a>([downsampling_factor])</td>
+<td>Generate tissue region annotation.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#slide.OpenSlide.read_annotated_region" title="slide.OpenSlide.read_annotated_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_annotated_region</span></code></a>(location,&nbsp;level,&nbsp;size)</td>
+<td>Crop a smaller region from a WSI.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#slide.OpenSlide.read_random_patch" title="slide.OpenSlide.read_random_patch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_random_patch</span></code></a>(size,&nbsp;level[,&nbsp;…])</td>
+<td>Crop random patch from WSI.</td>
+</tr>
+<tr class="row-odd"><td><a class="reference internal" href="#slide.OpenSlide.read_region" title="slide.OpenSlide.read_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_region</span></code></a>(location,&nbsp;level,&nbsp;size)</td>
+<td>Return a PIL.Image containing the contents of the region.</td>
+</tr>
+<tr class="row-even"><td><a class="reference internal" href="#slide.OpenSlide.remap_annotation_labels" title="slide.OpenSlide.remap_annotation_labels"><code class="xref py py-obj docutils literal notranslate"><span class="pre">remap_annotation_labels</span></code></a>(label_map)</td>
+<td>Crop random patch from WSI.</td>
+</tr>
+</tbody>
+</table>
+<dl class="attribute">
+<dt id="slide.OpenSlide.associated_images">
+<code class="descname">associated_images</code><a class="headerlink" href="#slide.OpenSlide.associated_images" title="Permalink to this definition">¶</a></dt>
+<dd><p>Images associated with this whole-slide image.</p>
+<p>This is a map: image name -&gt; PIL.Image.</p>
+<p>Unlike in the C interface, the images accessible via this property
+are not premultiplied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="slide.OpenSlide.close">
+<code class="descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/openslide.html#OpenSlide.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close the OpenSlide object.</p>
+</dd></dl>
+
+<dl class="classmethod">
+<dt id="slide.OpenSlide.detect_format">
+<em class="property">classmethod </em><code class="descname">detect_format</code><span class="sig-paren">(</span><em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openslide.html#OpenSlide.detect_format"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide.detect_format" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a string describing the format vendor of the specified file.</p>
+<p>If the file format is not recognized, return None.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="slide.OpenSlide.dimensions">
+<code class="descname">dimensions</code><a class="headerlink" href="#slide.OpenSlide.dimensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>A (width, height) tuple for level 0 of the image.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="slide.OpenSlide.get_annotated_thumbnail">
+<code class="descname">get_annotated_thumbnail</code><span class="sig-paren">(</span><em>size</em>, <em>polygon_type='area'</em>, <em>line_thickness=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#OpenSlide.get_annotated_thumbnail"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide.get_annotated_thumbnail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert WSI to a scaled-down thumbnail.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first docutils">
+<dt><strong>size: 2-tuple</strong></dt>
+<dd><p class="first last">Maximum size of compressed image thumbnail as (width, height).</p>
+</dd>
+<dt><strong>polygon_type: str</strong></dt>
+<dd><p class="first last">Type of polygon drawing:
+* ‘line’
+* ‘area’</p>
+</dd>
+<dt><strong>line_thickness: int</strong></dt>
+<dd><p class="first last">Polygon edge line thickness. Required if <code class="docutils literal notranslate"><span class="pre">polygon_type</span></code> is
+<code class="docutils literal notranslate"><span class="pre">line</span></code>.</p>
+</dd>
+</dl>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>Scaled down slide (as PIL RGBA image) and annotation mask (as numpy 2D</strong></dt>
+<dd></dd>
+<dt><strong>array), plus the scaling factor.</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="slide.OpenSlide.get_best_level_for_downsample">
+<code class="descname">get_best_level_for_downsample</code><span class="sig-paren">(</span><em>downsample</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openslide.html#OpenSlide.get_best_level_for_downsample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide.get_best_level_for_downsample" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the best level for displaying the given downsample.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="slide.OpenSlide.get_thumbnail">
+<code class="descname">get_thumbnail</code><span class="sig-paren">(</span><em>size</em><span class="sig-paren">)</span><a class="headerlink" href="#slide.OpenSlide.get_thumbnail" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PIL.Image containing an RGB thumbnail of the image.</p>
+<p>size:     the maximum size of the thumbnail.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="slide.OpenSlide.get_tissue_mask">
+<code class="descname">get_tissue_mask</code><span class="sig-paren">(</span><em>downsampling_factor=64</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#OpenSlide.get_tissue_mask"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide.get_tissue_mask" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generate tissue region annotation.</p>
+<p>Make a binary mask annotating tissue regions on the WSI.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>downsampling_factor: int</strong></dt>
+<dd><p class="first last">The desired factor to downsample the image by, since full WSIs will
+not fit in memory. The image’s closest level downsample is found
+and used.</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>Binary mask as numpy 2D array, RGB slide image (in the used</strong></dt>
+<dd></dd>
+<dt><strong>downsampling level, to allow visualization) and downsampling factor.</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="slide.OpenSlide.level_count">
+<code class="descname">level_count</code><a class="headerlink" href="#slide.OpenSlide.level_count" title="Permalink to this definition">¶</a></dt>
+<dd><p>The number of levels in the image.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="slide.OpenSlide.level_dimensions">
+<code class="descname">level_dimensions</code><a class="headerlink" href="#slide.OpenSlide.level_dimensions" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of (width, height) tuples, one for each level of the image.</p>
+<p>level_dimensions[n] contains the dimensions of level n.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="slide.OpenSlide.level_downsamples">
+<code class="descname">level_downsamples</code><a class="headerlink" href="#slide.OpenSlide.level_downsamples" title="Permalink to this definition">¶</a></dt>
+<dd><p>A list of downsampling factors for each level of the image.</p>
+<p>level_downsample[n] contains the downsample factor of level n.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="slide.OpenSlide.properties">
+<code class="descname">properties</code><a class="headerlink" href="#slide.OpenSlide.properties" title="Permalink to this definition">¶</a></dt>
+<dd><p>Metadata about the image.</p>
+<p>This is a map: property name -&gt; property value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="slide.OpenSlide.read_annotated_region">
+<code class="descname">read_annotated_region</code><span class="sig-paren">(</span><em>location</em>, <em>level</em>, <em>size</em>, <em>polygon_type='area'</em>, <em>line_thickness=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#OpenSlide.read_annotated_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide.read_annotated_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop a smaller region from a WSI.</p>
+<p>Get a defined region from a WSI, together with its annotation mask.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>location: 2-tuple</strong></dt>
+<dd><p class="first last">X and y coordinates of the top left pixel. Namesake argument to
+OpenSlide’s “read_region” function.</p>
+</dd>
+<dt><strong>level: int</strong></dt>
+<dd><p class="first last">Slide level. Namesake argument to OpenSlide’s “read_region”
+function.</p>
+</dd>
+<dt><strong>size: 2-tuple</strong></dt>
+<dd><p class="first last">Crop size (width, height). Namesake argument to OpenSlide’s
+“read_region” function.</p>
+</dd>
+<dt><strong>polygon_type: str</strong></dt>
+<dd><p class="first last">Type of polygon drawing:
+* ‘line’
+* ‘area’</p>
+</dd>
+<dt><strong>line_thickness: int</strong></dt>
+<dd><p class="first last">Polygon edge line thickness. Required if ‘polygon_type’ is ‘line’.</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>Image region (as PIL RGBA image) and the annotation mask (as numpy 2d</strong></dt>
+<dd></dd>
+<dt><strong>array).</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="slide.OpenSlide.read_random_patch">
+<code class="descname">read_random_patch</code><span class="sig-paren">(</span><em>size</em>, <em>level</em>, <em>downsampling_factor=64</em>, <em>from_annotation=0.5</em>, <em>min_area=0.5</em>, <em>mask_class_remap=None</em>, <em>return_patch_class=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#OpenSlide.read_random_patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide.read_random_patch" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop random patch from WSI.</p>
+<p>Select random location according to provided or tissue annotation.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>size: 2-tuple or int</strong></dt>
+<dd><p class="first last">Crop size (width, height). If int, square crop is made.
+Namesake argument to Wsi.read_random_region.</p>
+</dd>
+<dt><strong>level: int</strong></dt>
+<dd><p class="first last">Slide level. Namesake argument to OpenSlide’s “read_region”
+function.</p>
+</dd>
+<dt><strong>aim_for_tumors: float</strong></dt>
+<dd><p class="first last">Probability to select a top left corner pixel of region to crop
+within provided annotations.</p>
+</dd>
+<dt><strong>censor_mixed_class: bool</strong></dt>
+<dd><p class="first last">Whether to return only patches with a single class (all pixel
+annotations are equal).</p>
+</dd>
+<dt><strong>downsampling_factor: int</strong></dt>
+<dd><p class="first last">The desired factor to downsample the image by, since full WSIs will
+not fit in memory. The image’s closest level downsample is found
+and used. Namesake argument to Wsi.read_random_region.</p>
+</dd>
+<dt><strong>mask_class_remap: dict</strong></dt>
+<dd><p class="first last">Values to remap class label integers in mask, provided as a dict of
+‘palette’ (original values) and ‘key’ (new values).</p>
+</dd>
+<dt><strong>return_patch_class: bool</strong></dt>
+<dd><p class="first last">Whether to return a patch-wide int class label computed from the
+lesion-level annotation mask.</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+<dt><strong>Binary mask as numpy 2D array, RGB slide image (in the used</strong></dt>
+<dd></dd>
+<dt><strong>downsampling level, to allow visualization) and downsampling factor.</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="slide.OpenSlide.read_region">
+<code class="descname">read_region</code><span class="sig-paren">(</span><em>location</em>, <em>level</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/openslide.html#OpenSlide.read_region"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide.read_region" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a PIL.Image containing the contents of the region.</p>
+<dl class="docutils">
+<dt>location: (x, y) tuple giving the top left pixel in the level 0</dt>
+<dd>reference frame.</dd>
+</dl>
+<p>level:    the level number.
+size:     (width, height) tuple giving the region size.</p>
+<p>Unlike in the C interface, the image data returned by this
+function is not premultiplied.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="slide.OpenSlide.remap_annotation_labels">
+<code class="descname">remap_annotation_labels</code><span class="sig-paren">(</span><em>label_map</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#OpenSlide.remap_annotation_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.OpenSlide.remap_annotation_labels" title="Permalink to this definition">¶</a></dt>
+<dd><p>Crop random patch from WSI.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><dl class="first last docutils">
+<dt><strong>label_map: dict</strong></dt>
+<dd><p class="first last">Values to remap annotation label integers in mask, provided as dict
+of ‘palette’ (original values) and ‘key’ (new values).</p>
+</dd>
+<dt><strong>Returns</strong></dt>
+<dd></dd>
+<dt><strong>——-</strong></dt>
+<dd></dd>
+</dl>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<form class="search" action="search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="related bottom">
+  <nav id="rellinks">
+    <ul>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="index.html">wsipre 0.0.1 documentation</a></li> 
+    </ul>
+  </nav>
+  </div>
+  <footer id="pagefooter">&copy; 2018, Luis A. Vale Silva.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+      1.8.2
+        with the <a href="http://github.com/irskep/sphinx-better-theme">
+          better</a> theme.
+
+  </footer>
+
+  
+  </body>
+</html>

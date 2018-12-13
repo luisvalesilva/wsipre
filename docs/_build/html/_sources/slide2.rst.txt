@@ -1,0 +1,7 @@
+Slide
+=====
+.. module:: slide 
+
+.. autoclass:: OpenSlide
+   :members:
+   :inherited-members:

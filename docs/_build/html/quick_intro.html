@@ -1,0 +1,186 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Quick introduction &#8212; wsipre 0.0.1 documentation</title>
+    <link rel="stylesheet" href="_static/better.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Beyond wsipre" href="beyondwsipre.html" />
+    <link rel="prev" title="wsipre" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  </head><body>
+    <header id="pageheader"><h1><a href="index.html ">
+        wsipre 0.0.1 documentation
+    </a></h1></header>
+  <div class="related top">
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">wsipre</a>
+        </li>
+        <li>
+          <a href="beyondwsipre.html" title="Next document">Beyond wsipre</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="index.html">wsipre 0.0.1 documentation</a></li> 
+    </ul>
+  </nav>
+  </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="quick-introduction">
+<h1>Quick introduction<a class="headerlink" href="#quick-introduction" title="Permalink to this headline">¶</a></h1>
+<p><strong>wsipre</strong> has two main modules (see <a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a> for docs):</p>
+<blockquote>
+<div><ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">slide</span></code>: load and process WSIs</li>
+<li><code class="docutils literal notranslate"><span class="pre">show</span></code>: visualize images generated using <code class="docutils literal notranslate"><span class="pre">slide</span></code></li>
+</ul>
+</div></blockquote>
+<p>The following quick intro illustrates basic usage of these modules. First, load
+packages (Matplotlib is only used here to plot images with no annotation).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">matplotlib</span> <span class="k">import</span> <span class="n">pyplot</span> <span class="k">as</span> <span class="n">plt</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">wsipre</span> <span class="k">import</span> <span class="n">slide</span><span class="p">,</span> <span class="n">show</span>
+</pre></div>
+</div>
+<p>Load WSI with its region-level tumor annotation.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wsi</span> <span class="o">=</span> <span class="n">slide</span><span class="o">.</span><span class="n">Slide</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="s1">&#39;patient_012_node_0.tif&#39;</span><span class="p">,</span>
+<span class="go">                      annotation_filename=&#39;patient_012_node_0.xml&#39;,</span>
+<span class="go">                      data_source=&#39;camelyon&#39;)</span>
+</pre></div>
+</div>
+<p>Generate and show a thumbnail.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">thumbnail</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">downsampling_factor</span> <span class="o">=</span> <span class="n">wsi</span><span class="o">.</span><span class="n">get_thumbnail_with_annotation</span><span class="p">(</span>
+<span class="go">        size=(3000, 3000), polygon_type=&#39;line&#39;, line_thickness=8)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">black</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">red</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yellow</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">colors</span> <span class="o">=</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">black</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="n">black</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span> <span class="n">red</span><span class="p">}</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">show</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">thumbnail</span><span class="p">,</span> <span class="n">annotation</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span> <span class="n">color_map</span><span class="o">=</span><span class="n">colors</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">show_image_with_annotation</span><span class="p">(</span><span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/thumb.png"><img alt="_images/thumb.png" class="align-center" src="_images/thumb.png" style="width: 221.2px; height: 404.59999999999997px;" /></a>
+<p>Zoom in and read a smaller region from the WSI.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">loc</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="mi">150</span><span class="o">*</span><span class="n">downsampling_factor</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="mi">1450</span><span class="o">*</span><span class="n">downsampling_factor</span><span class="p">))</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">slide_region</span><span class="p">,</span> <span class="n">mask_region</span> <span class="o">=</span> <span class="n">wsi</span><span class="o">.</span><span class="n">read_region_with_annotation</span><span class="p">(</span>
+<span class="go">         location=loc, level=2, size=(1000, 1000), polygon_type=&#39;line&#39;,</span>
+<span class="go">         line_thickness=20)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">show</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span>
+<span class="go">        image=slide_region, annotation=mask_region, color_map=colors)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">show_image_with_annotation</span><span class="p">(</span><span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/region.png"><img alt="_images/region.png" class="align-center" src="_images/region.png" style="width: 231.7px; height: 214.89999999999998px;" /></a>
+<p>Locate tissue regions in the WSI automatically.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">wsi</span><span class="o">.</span><span class="n">get_tissue_mask</span><span class="p">(</span><span class="n">polygon_type</span><span class="o">=</span><span class="s1">&#39;line&#39;</span><span class="p">,</span> <span class="n">line_thickness</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="go">Slide(&#39;patient_012_node_0.tif&#39;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">show</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">image</span><span class="o">=</span><span class="n">wsi</span><span class="o">.</span><span class="n">downsampled_slide</span><span class="p">,</span>
+<span class="go">                      annotation=wsi.tissue_mask,</span>
+<span class="go">                      color_map={0: black, 1: yellow})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">show_image_with_annotation</span><span class="p">(</span><span class="n">split</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/tissue.png"><img alt="_images/tissue.png" class="align-center" src="_images/tissue.png" style="width: 221.2px; height: 404.59999999999997px;" /></a>
+<p>Sample a random patch from tissue regions.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tissue_patch</span> <span class="o">=</span> <span class="n">wsi</span><span class="o">.</span><span class="n">read_random_tissue_patch</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">224</span><span class="p">,</span> <span class="mi">224</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">tissue_patch</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/random_patch.png"><img alt="_images/random_patch.png" class="align-center" src="_images/random_patch.png" style="width: 220.5px; height: 214.2px;" /></a>
+<p>Sample a random patch from regions annotated as tumor (label 2).</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">slide_region</span><span class="p">,</span> <span class="n">mask_region</span> <span class="o">=</span> <span class="n">wsi</span><span class="o">.</span><span class="n">read_random_patch</span><span class="p">(</span>
+<span class="go">        level=2, size=(299, 299), target_class=2,</span>
+<span class="go">        min_class_area_ratio=0.75, polygon_type=&#39;area&#39;)</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span> <span class="o">=</span> <span class="n">show</span><span class="o">.</span><span class="n">Figure</span><span class="p">(</span><span class="n">slide_region</span><span class="p">,</span> <span class="n">mask_region</span><span class="p">,</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">black</span><span class="p">,</span> <span class="mi">2</span><span class="p">:</span><span class="n">red</span><span class="p">})</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">show_image_with_annotation</span><span class="p">(</span><span class="n">split</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/random_tumor_patch.png"><img alt="_images/random_tumor_patch.png" class="align-center" src="_images/random_tumor_patch.png" style="width: 420.7px; height: 201.6px;" /></a>
+<p>Double check the mapping between class label and color.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">fig</span><span class="o">.</span><span class="n">show_label_colors</span><span class="p">()</span>
+</pre></div>
+</div>
+<a class="reference internal image-reference" href="_images/color_bars.png"><img alt="_images/color_bars.png" class="align-center" src="_images/color_bars.png" style="width: 532.8000000000001px; height: 65.7px;" /></a>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">wsipre</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="beyondwsipre.html"
+                        title="next chapter">Beyond wsipre</a></p>
+<form class="search" action="search.html" method="get">
+  <input type="text" name="q"
+   placeholder="type to search" />
+  <input type="hidden" name="check_keywords" value="yes" />
+  <input type="hidden" name="area" value="default" />
+</form>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+  <div class="related bottom">
+  <nav id="rellinks">
+    <ul>
+        <li>
+          &larr;
+          <a href="index.html" title="Previous document">wsipre</a>
+        </li>
+        <li>
+          <a href="beyondwsipre.html" title="Next document">Beyond wsipre</a>
+          &rarr;
+        </li>
+    </ul>
+  </nav>
+  <nav id="breadcrumbs">
+    <ul>
+      <li><a href="index.html">wsipre 0.0.1 documentation</a></li> 
+    </ul>
+  </nav>
+  </div>
+  <footer id="pagefooter">&copy; 2018, Luis A. Vale Silva.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a>
+      1.8.2
+        with the <a href="http://github.com/irskep/sphinx-better-theme">
+          better</a> theme.
+
+  </footer>
+
+  
+  </body>
+</html>
