@@ -12,8 +12,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     license = "BSD",
-    keywords = "'whole-slide image' 'virtual slide' OpenSlide 'machine
-    learning' 'deep learning'",
+    keywords = "'whole-slide image' 'virtual slide' OpenSlide 'machine learning' 'deep learning'",
     url="https://github.com/luisvalesilva/wsipre",
     packages=setuptools.find_packages(),
     classifiers=[
