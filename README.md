@@ -6,7 +6,7 @@
 known as virtual slides) with region-level annotations.
 
 **wsipre** can be installed from PyPI as shown below. For more detail check out
-the [docs](http://luisvalesilva.github.io/wsipre/docs/index.html).
+the [docs](https://luisvalesilva.com/wsipre/_build/html/index.html).
 
 ```console
 pip install wsipre
