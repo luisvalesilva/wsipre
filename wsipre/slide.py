@@ -365,6 +365,14 @@ class Slide(_AnnotatedOpenSlide):
         """Get region (patch) coordinates at random."""
         # Select coordinates matching target class at random
         pixels_in_roi = tuple(zip(*np.where(annotation_mask == target_class)))
+
+        # TODO: implement way to avoid tumor (or other label) coordinates:
+        # add argument labels to avoid (e.g. avoid_labels=[1, 2])
+        # check that annotations are available
+        # generate annotation thumbnail of the same size as tissue mask
+        # remove intersection of pixels_in_roi with pixels of coordinates found
+        #     in "avoid_labels"
+
         coordinates = random.choice(pixels_in_roi)
 
         # Scale coordinates up to level-0 dimensions
