@@ -5,14 +5,14 @@ wsipre
 Python package to handle whole-slide images (WSI; also known as
 `virtual slides`_) with region-level annotations.
 
-**wsipre** is a wrapper of the excellent `OpenSlide Python`_ package, an 
-interface the `OpenSlide`_ C library which allows reading WSIs. **wsipre**
+**wsipre** is a wrapper of the `OpenSlide Python`_ package, an interface to the
+excellent `OpenSlide`_ C library which allows reading WSIs. **wsipre**
 conserves OpenSlide Python's API and extends it to handle WSI annotations and
 to perform processing tasks. The underlying objective is the preparation of
 WSIs for Machine Learning (particularly Deep Learning).
 
 You may also want to check out `py-wsi`_, a different Python package providing
-some overlapping functionality.
+overlapping functionality.
 
 .. _virtual slides: https://en.wikipedia.org/wiki/Virtual_slide
 .. _py-wsi: https://github.com/ysbecca/py-wsi/ 
