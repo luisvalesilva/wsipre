@@ -62,6 +62,7 @@ class _AnnotatedOpenSlide(openslide.OpenSlide):
             if self.data_source == 'camelyon':
                 self.polygons, self.labels = reader.camelyon_annotations(
                     self.annotation_filename)
+                # CAMELYON17 data
                 if 'metastases' in self.labels:
                     # Avoid value 0 (used by default for unlabeled regions)
                     self.label_map = {'metastases': 2, 'normal': 1}
@@ -197,13 +198,6 @@ class Slide(_AnnotatedOpenSlide):
 
         return mask
 
-    def _update_label_map(self, annotation_mask):
-        labels = np.unique(annotation_mask)
-        self.label_map = {key: label for key, label in self.label_map.items()
-                          if label in labels}
-
-        return self
-
     def get_thumbnail_with_annotation(self, size, polygon_type='area',
                                       line_thickness=None):
         """Convert *annotated* WSI to a scaled-down thumbnail.
@@ -244,9 +238,6 @@ class Slide(_AnnotatedOpenSlide):
         mask = np.zeros(thumb.size[::-1])  # Reverse width and height
         mask = self._draw_polygons(
             mask, polygons, polygon_type, line_thickness)
-
-        # Drop unused labels from label_map
-        # self._update_label_map(mask)
 
         return thumb, mask, downsampling_factor
 
@@ -300,9 +291,6 @@ class Slide(_AnnotatedOpenSlide):
         mask_region = np.zeros(size[::-1])
         mask_region = self._draw_polygons(
            mask_region, polygons, polygon_type, line_thickness)
-
-        # Drop unused labels from label_map
-        # self._update_label_map(mask_region)
 
         return slide_region, mask_region
 
@@ -360,19 +348,9 @@ class Slide(_AnnotatedOpenSlide):
 
         return self
 
-    def _get_random_coordinates(self, level, annotation_mask,
-                                mask_downsampling_factor, target_class, size):
+    def _get_random_coordinates(self, pixels_in_roi, level,
+                                mask_downsampling_factor, size):
         """Get region (patch) coordinates at random."""
-        # Select coordinates matching target class at random
-        pixels_in_roi = tuple(zip(*np.where(annotation_mask == target_class)))
-
-        # TODO: implement way to avoid tumor (or other label) coordinates:
-        # add argument labels to avoid (e.g. avoid_labels=[1, 2])
-        # check that annotations are available
-        # generate annotation thumbnail of the same size as tissue mask
-        # remove intersection of pixels_in_roi with pixels of coordinates found
-        #     in "avoid_labels"
-
         coordinates = random.choice(pixels_in_roi)
 
         # Scale coordinates up to level-0 dimensions
@@ -394,6 +372,22 @@ class Slide(_AnnotatedOpenSlide):
 
         return int(col_location), int(row_location)  # OpenSlide: width, height
 
+    def _get_pixels_avoiding_labels(self, avoid_labels):
+        # Can only do this if an annotation is available
+        if self.polygons is None:
+            raise ValueError('No annotation is available.')
+
+        # Generate annotated thumbnail with exact dimensions of tissue mask
+        rows, cols = self.tissue_mask.shape
+        _, mask, _ = self.get_thumbnail_with_annotation(
+            size=(cols, rows), polygon_type='area')
+
+        # Locate pixels in tissue and not in "avoid_labels"
+        new_mask = np.where(self.tissue_mask == 1, 1, mask)
+        new_mask = np.where(np.isin(mask, avoid_labels), 2, new_mask)
+
+        return tuple(zip(*np.where(new_mask == 1)))
+
     def _max_repeated_pixel_ratio(self, image):
         """Compute ratio of count of most common pixel value to total count."""
         image = np.array(image)
@@ -401,7 +395,13 @@ class Slide(_AnnotatedOpenSlide):
 
         return np.max(counts) / image.size
 
-    def read_random_tissue_patch(self, level, size):
+    def _get_area_ratio(self, mask, target_class):
+        """Compute ratio of pixels labeled as 'target_class' to all pixels."""
+        class_pixels = mask[np.where(mask == target_class)].size
+
+        return class_pixels / mask.size
+
+    def read_random_tissue_patch(self, level, size, avoid_labels=None):
         """Crop random patch from detected tissue on WSI.
 
         Parameters
@@ -412,41 +412,86 @@ class Slide(_AnnotatedOpenSlide):
         size: 2-tuple
             Crop size (width, height). Namesake argument to OpenSlide's
             "read_region" function.
+        avoid_labels: iterable
+            Labels from provided annotation to avoid when targeting tissue.
+            An annotation is must be available.
 
         Returns
         -------
-        Image region or patch (as PIL RGBA image).
+        Image region or patch as PIL RGBA image (plus annotation mask as 2D
+        Numpy array if labels to avoid are provided).
 
         """
         if self.tissue_mask is None:
             self.get_tissue_mask()
 
+        if avoid_labels is None:
+            # Select coordinates matching tissue (labeled as 1)
+            pixels_in_roi = tuple(zip(*np.where(self.tissue_mask == 1)))
+        else:
+            # Select coordinates matching tissue (labeled as 1) and avoiding
+            # indicated labels
+            # Can only do this if an annotation is available
+            if self.polygons is None:
+                raise ValueError('No annotation is available.')
+
+            # Generate annotated thumbnail with exact dimensions of tissue mask
+            rows, cols = self.tissue_mask.shape
+            _, mask, _ = self.get_thumbnail_with_annotation(
+                size=(cols, rows), polygon_type='area')
+
+            # Locate pixels in tissue and not in "avoid_labels"
+            new_mask = np.where(self.tissue_mask == 1, 1, mask)
+            new_mask = np.where(np.isin(mask, avoid_labels), 2, new_mask)
+
+            pixels_in_roi = tuple(zip(*np.where(new_mask == 1)))
+
         coordinates = self._get_random_coordinates(
-            level, self.tissue_mask, self.downsampling_factor, 1, size)
+            pixels_in_roi, level, self.downsampling_factor, size)
         patch = self.read_region(coordinates, level, size)
 
         # Avoid false positive regions where a large proportion of pixels is
         # exactly the same
         while self._max_repeated_pixel_ratio(patch) > 0.5:
             coordinates = self._get_random_coordinates(
-                level, self.tissue_mask, self.downsampling_factor, 1, size)
+                pixels_in_roi, level, self.downsampling_factor, size)
             patch = self.read_region(coordinates, level, size)
 
+        # Also, make sure the patch is mostly normal tissue
+        # (or backgound, not actually excluding it here...)
+        if avoid_labels is not None:
+            patch, mask = self.read_region_with_annotation(
+                coordinates, level, size, polygon_type='area')
+            avoid_ratios = [self._get_area_ratio(mask, x)
+                            for x in avoid_labels]
+            i = 0
+            while any(x > 0.1 for x in avoid_ratios):
+                i += 1
+                coordinates = self._get_random_coordinates(
+                    pixels_in_roi, level, self.downsampling_factor, size)
+                patch, mask = self.read_region_with_annotation(
+                    coordinates, level, size, polygon_type='area')
+                avoid_ratios = [self._get_area_ratio(mask, x)
+                                for x in avoid_labels]
+                if i > 15:
+                    raise ValueError(
+                        'Cannot seem to find patch matching requirements.')
+
+            return patch, mask
+
         return patch
-
-    def _get_area_ratio(self, mask, target_class):
-        """Compute ratio of pixels labeled as 'target_class' to all pixels."""
-        class_pixels = mask[np.where(mask == target_class)].size
-
-        return class_pixels / mask.size
 
     def _pick_random_coordinates(self, level, size, target_class):
         """Pick random patch to crop from WSI."""
         # Get thumbnail and select coordinates at random
         _, mask, downsampling_factor = self.get_thumbnail_with_annotation(
              size=(5000, 5000), polygon_type='area')
+
+        # Select coordinates matching target class
+        pixels_in_roi = tuple(zip(*np.where(mask == target_class)))
+
         coordinates = self._get_random_coordinates(
-            level, mask, downsampling_factor, target_class, size)
+            pixels_in_roi, level, downsampling_factor, size)
 
         # Get ratio (polygon type must be 'area')
         _, mask = self.read_region_with_annotation(
@@ -486,7 +531,8 @@ class Slide(_AnnotatedOpenSlide):
 
         Returns
         -------
-        Image region or patch (as PIL RGBA image).
+        Image region or patch as PIL RGBA image plus annotation mask as 2D
+        Numpy array.
 
         """
         if not 0 < min_class_area_ratio <= 1:

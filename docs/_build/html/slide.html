@@ -141,7 +141,7 @@ values used in numpy masks.</p>
 <tr class="row-odd"><td><a class="reference internal" href="#slide.Slide.read_random_patch" title="slide.Slide.read_random_patch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_random_patch</span></code></a>(level,&nbsp;size,&nbsp;target_class,&nbsp;…)</td>
 <td>Crop random patch from WSI.</td>
 </tr>
-<tr class="row-even"><td><a class="reference internal" href="#slide.Slide.read_random_tissue_patch" title="slide.Slide.read_random_tissue_patch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_random_tissue_patch</span></code></a>(level,&nbsp;size)</td>
+<tr class="row-even"><td><a class="reference internal" href="#slide.Slide.read_random_tissue_patch" title="slide.Slide.read_random_tissue_patch"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_random_tissue_patch</span></code></a>(level,&nbsp;size[,&nbsp;…])</td>
 <td>Crop random patch from detected tissue on WSI.</td>
 </tr>
 <tr class="row-odd"><td><a class="reference internal" href="#slide.Slide.read_region" title="slide.Slide.read_region"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_region</span></code></a>(location,&nbsp;level,&nbsp;size)</td>
@@ -362,7 +362,9 @@ function.</p>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>Image region or patch (as PIL RGBA image).</strong></dt>
+<dt><strong>Image region or patch as PIL RGBA image plus annotation mask as 2D</strong></dt>
+<dd></dd>
+<dt><strong>Numpy array.</strong></dt>
 <dd></dd>
 </dl>
 </td>
@@ -373,7 +375,7 @@ function.</p>
 
 <dl class="method">
 <dt id="slide.Slide.read_random_tissue_patch">
-<code class="descname">read_random_tissue_patch</code><span class="sig-paren">(</span><em>level</em>, <em>size</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#Slide.read_random_tissue_patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.Slide.read_random_tissue_patch" title="Permalink to this definition">¶</a></dt>
+<code class="descname">read_random_tissue_patch</code><span class="sig-paren">(</span><em>level</em>, <em>size</em>, <em>avoid_labels=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#Slide.read_random_tissue_patch"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.Slide.read_random_tissue_patch" title="Permalink to this definition">¶</a></dt>
 <dd><p>Crop random patch from detected tissue on WSI.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
@@ -388,11 +390,17 @@ function.</p>
 <dd><p class="first last">Crop size (width, height). Namesake argument to OpenSlide’s
 “read_region” function.</p>
 </dd>
+<dt><strong>avoid_labels: iterable</strong></dt>
+<dd><p class="first last">Labels from provided annotation to avoid when targeting tissue.
+An annotation is must be available.</p>
+</dd>
 </dl>
 </td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><dl class="first last docutils">
-<dt><strong>Image region or patch (as PIL RGBA image).</strong></dt>
+<dt><strong>Image region or patch as PIL RGBA image (plus annotation mask as 2D</strong></dt>
+<dd></dd>
+<dt><strong>Numpy array if labels to avoid are provided).</strong></dt>
 <dd></dd>
 </dl>
 </td>

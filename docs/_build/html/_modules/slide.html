@@ -105,6 +105,7 @@
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="o">==</span> <span class="s1">&#39;camelyon&#39;</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">polygons</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">camelyon_annotations</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">annotation_filename</span><span class="p">)</span>
+                <span class="c1"># CAMELYON17 data</span>
                 <span class="k">if</span> <span class="s1">&#39;metastases&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
                     <span class="c1"># Avoid value 0 (used by default for unlabeled regions)</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;metastases&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;normal&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
@@ -240,13 +241,6 @@
 
         <span class="k">return</span> <span class="n">mask</span>
 
-    <span class="k">def</span> <span class="nf">_update_label_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">annotation_mask</span><span class="p">):</span>
-        <span class="n">labels</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">annotation_mask</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">label</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">label</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-                          <span class="k">if</span> <span class="n">label</span> <span class="ow">in</span> <span class="n">labels</span><span class="p">}</span>
-
-        <span class="k">return</span> <span class="bp">self</span>
-
 <div class="viewcode-block" id="Slide.get_thumbnail_with_annotation"><a class="viewcode-back" href="../slide.html#slide.Slide.get_thumbnail_with_annotation">[docs]</a>    <span class="k">def</span> <span class="nf">get_thumbnail_with_annotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">polygon_type</span><span class="o">=</span><span class="s1">&#39;area&#39;</span><span class="p">,</span>
                                       <span class="n">line_thickness</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Convert *annotated* WSI to a scaled-down thumbnail.</span>
@@ -287,9 +281,6 @@
         <span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">thumb</span><span class="o">.</span><span class="n">size</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>  <span class="c1"># Reverse width and height</span>
         <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_polygons</span><span class="p">(</span>
             <span class="n">mask</span><span class="p">,</span> <span class="n">polygons</span><span class="p">,</span> <span class="n">polygon_type</span><span class="p">,</span> <span class="n">line_thickness</span><span class="p">)</span>
-
-        <span class="c1"># Drop unused labels from label_map</span>
-        <span class="c1"># self._update_label_map(mask)</span>
 
         <span class="k">return</span> <span class="n">thumb</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">downsampling_factor</span></div>
 
@@ -343,9 +334,6 @@
         <span class="n">mask_region</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">size</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="n">mask_region</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_draw_polygons</span><span class="p">(</span>
            <span class="n">mask_region</span><span class="p">,</span> <span class="n">polygons</span><span class="p">,</span> <span class="n">polygon_type</span><span class="p">,</span> <span class="n">line_thickness</span><span class="p">)</span>
-
-        <span class="c1"># Drop unused labels from label_map</span>
-        <span class="c1"># self._update_label_map(mask_region)</span>
 
         <span class="k">return</span> <span class="n">slide_region</span><span class="p">,</span> <span class="n">mask_region</span></div>
 
@@ -403,19 +391,9 @@
 
         <span class="k">return</span> <span class="bp">self</span></div>
 
-    <span class="k">def</span> <span class="nf">_get_random_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">annotation_mask</span><span class="p">,</span>
-                                <span class="n">mask_downsampling_factor</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_random_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pixels_in_roi</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span>
+                                <span class="n">mask_downsampling_factor</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Get region (patch) coordinates at random.&quot;&quot;&quot;</span>
-        <span class="c1"># Select coordinates matching target class at random</span>
-        <span class="n">pixels_in_roi</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">annotation_mask</span> <span class="o">==</span> <span class="n">target_class</span><span class="p">)))</span>
-
-        <span class="c1"># TODO: implement way to avoid tumor (or other label) coordinates:</span>
-        <span class="c1"># add argument labels to avoid (e.g. avoid_labels=[1, 2])</span>
-        <span class="c1"># check that annotations are available</span>
-        <span class="c1"># generate annotation thumbnail of the same size as tissue mask</span>
-        <span class="c1"># remove intersection of pixels_in_roi with pixels of coordinates found</span>
-        <span class="c1">#     in &quot;avoid_labels&quot;</span>
-
         <span class="n">coordinates</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">pixels_in_roi</span><span class="p">)</span>
 
         <span class="c1"># Scale coordinates up to level-0 dimensions</span>
@@ -437,6 +415,22 @@
 
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">col_location</span><span class="p">),</span> <span class="nb">int</span><span class="p">(</span><span class="n">row_location</span><span class="p">)</span>  <span class="c1"># OpenSlide: width, height</span>
 
+    <span class="k">def</span> <span class="nf">_get_pixels_avoiding_labels</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">avoid_labels</span><span class="p">):</span>
+        <span class="c1"># Can only do this if an annotation is available</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygons</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No annotation is available.&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Generate annotated thumbnail with exact dimensions of tissue mask</span>
+        <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tissue_mask</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_thumbnail_with_annotation</span><span class="p">(</span>
+            <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">),</span> <span class="n">polygon_type</span><span class="o">=</span><span class="s1">&#39;area&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Locate pixels in tissue and not in &quot;avoid_labels&quot;</span>
+        <span class="n">new_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tissue_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+        <span class="n">new_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">avoid_labels</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">new_mask</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">new_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)))</span>
+
     <span class="k">def</span> <span class="nf">_max_repeated_pixel_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">image</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Compute ratio of count of most common pixel value to total count.&quot;&quot;&quot;</span>
         <span class="n">image</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">image</span><span class="p">)</span>
@@ -444,7 +438,13 @@
 
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">counts</span><span class="p">)</span> <span class="o">/</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span>
 
-<div class="viewcode-block" id="Slide.read_random_tissue_patch"><a class="viewcode-back" href="../slide.html#slide.Slide.read_random_tissue_patch">[docs]</a>    <span class="k">def</span> <span class="nf">read_random_tissue_patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">size</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">_get_area_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">target_class</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Compute ratio of pixels labeled as &#39;target_class&#39; to all pixels.&quot;&quot;&quot;</span>
+        <span class="n">class_pixels</span> <span class="o">=</span> <span class="n">mask</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="n">target_class</span><span class="p">)]</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="k">return</span> <span class="n">class_pixels</span> <span class="o">/</span> <span class="n">mask</span><span class="o">.</span><span class="n">size</span>
+
+<div class="viewcode-block" id="Slide.read_random_tissue_patch"><a class="viewcode-back" href="../slide.html#slide.Slide.read_random_tissue_patch">[docs]</a>    <span class="k">def</span> <span class="nf">read_random_tissue_patch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">avoid_labels</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Crop random patch from detected tissue on WSI.</span>
 
 <span class="sd">        Parameters</span>
@@ -455,41 +455,86 @@
 <span class="sd">        size: 2-tuple</span>
 <span class="sd">            Crop size (width, height). Namesake argument to OpenSlide&#39;s</span>
 <span class="sd">            &quot;read_region&quot; function.</span>
+<span class="sd">        avoid_labels: iterable</span>
+<span class="sd">            Labels from provided annotation to avoid when targeting tissue.</span>
+<span class="sd">            An annotation is must be available.</span>
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        Image region or patch (as PIL RGBA image).</span>
+<span class="sd">        Image region or patch as PIL RGBA image (plus annotation mask as 2D</span>
+<span class="sd">        Numpy array if labels to avoid are provided).</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tissue_mask</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">get_tissue_mask</span><span class="p">()</span>
 
+        <span class="k">if</span> <span class="n">avoid_labels</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="c1"># Select coordinates matching tissue (labeled as 1)</span>
+            <span class="n">pixels_in_roi</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tissue_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Select coordinates matching tissue (labeled as 1) and avoiding</span>
+            <span class="c1"># indicated labels</span>
+            <span class="c1"># Can only do this if an annotation is available</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">polygons</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;No annotation is available.&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Generate annotated thumbnail with exact dimensions of tissue mask</span>
+            <span class="n">rows</span><span class="p">,</span> <span class="n">cols</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tissue_mask</span><span class="o">.</span><span class="n">shape</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_thumbnail_with_annotation</span><span class="p">(</span>
+                <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="n">cols</span><span class="p">,</span> <span class="n">rows</span><span class="p">),</span> <span class="n">polygon_type</span><span class="o">=</span><span class="s1">&#39;area&#39;</span><span class="p">)</span>
+
+            <span class="c1"># Locate pixels in tissue and not in &quot;avoid_labels&quot;</span>
+            <span class="n">new_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tissue_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mask</span><span class="p">)</span>
+            <span class="n">new_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">avoid_labels</span><span class="p">),</span> <span class="mi">2</span><span class="p">,</span> <span class="n">new_mask</span><span class="p">)</span>
+
+            <span class="n">pixels_in_roi</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">new_mask</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)))</span>
+
         <span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_random_coordinates</span><span class="p">(</span>
-            <span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tissue_mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsampling_factor</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+            <span class="n">pixels_in_roi</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsampling_factor</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
         <span class="n">patch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_region</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
 
         <span class="c1"># Avoid false positive regions where a large proportion of pixels is</span>
         <span class="c1"># exactly the same</span>
         <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max_repeated_pixel_ratio</span><span class="p">(</span><span class="n">patch</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">0.5</span><span class="p">:</span>
             <span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_random_coordinates</span><span class="p">(</span>
-                <span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tissue_mask</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsampling_factor</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+                <span class="n">pixels_in_roi</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsampling_factor</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
             <span class="n">patch</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_region</span><span class="p">(</span><span class="n">coordinates</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
 
+        <span class="c1"># Also, make sure the patch is mostly normal tissue</span>
+        <span class="c1"># (or backgound, not actually excluding it here...)</span>
+        <span class="k">if</span> <span class="n">avoid_labels</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">patch</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_region_with_annotation</span><span class="p">(</span>
+                <span class="n">coordinates</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">polygon_type</span><span class="o">=</span><span class="s1">&#39;area&#39;</span><span class="p">)</span>
+            <span class="n">avoid_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_area_ratio</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+                            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">avoid_labels</span><span class="p">]</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">while</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span> <span class="o">&gt;</span> <span class="mf">0.1</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">avoid_ratios</span><span class="p">):</span>
+                <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_random_coordinates</span><span class="p">(</span>
+                    <span class="n">pixels_in_roi</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">downsampling_factor</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+                <span class="n">patch</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_region_with_annotation</span><span class="p">(</span>
+                    <span class="n">coordinates</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">polygon_type</span><span class="o">=</span><span class="s1">&#39;area&#39;</span><span class="p">)</span>
+                <span class="n">avoid_ratios</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_get_area_ratio</span><span class="p">(</span><span class="n">mask</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+                                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">avoid_labels</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">15</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s1">&#39;Cannot seem to find patch matching requirements.&#39;</span><span class="p">)</span>
+
+            <span class="k">return</span> <span class="n">patch</span><span class="p">,</span> <span class="n">mask</span>
+
         <span class="k">return</span> <span class="n">patch</span></div>
-
-    <span class="k">def</span> <span class="nf">_get_area_ratio</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">target_class</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;Compute ratio of pixels labeled as &#39;target_class&#39; to all pixels.&quot;&quot;&quot;</span>
-        <span class="n">class_pixels</span> <span class="o">=</span> <span class="n">mask</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="n">target_class</span><span class="p">)]</span><span class="o">.</span><span class="n">size</span>
-
-        <span class="k">return</span> <span class="n">class_pixels</span> <span class="o">/</span> <span class="n">mask</span><span class="o">.</span><span class="n">size</span>
 
     <span class="k">def</span> <span class="nf">_pick_random_coordinates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="n">target_class</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Pick random patch to crop from WSI.&quot;&quot;&quot;</span>
         <span class="c1"># Get thumbnail and select coordinates at random</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">downsampling_factor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_thumbnail_with_annotation</span><span class="p">(</span>
              <span class="n">size</span><span class="o">=</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span> <span class="n">polygon_type</span><span class="o">=</span><span class="s1">&#39;area&#39;</span><span class="p">)</span>
+
+        <span class="c1"># Select coordinates matching target class</span>
+        <span class="n">pixels_in_roi</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">mask</span> <span class="o">==</span> <span class="n">target_class</span><span class="p">)))</span>
+
         <span class="n">coordinates</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_random_coordinates</span><span class="p">(</span>
-            <span class="n">level</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">downsampling_factor</span><span class="p">,</span> <span class="n">target_class</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
+            <span class="n">pixels_in_roi</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">downsampling_factor</span><span class="p">,</span> <span class="n">size</span><span class="p">)</span>
 
         <span class="c1"># Get ratio (polygon type must be &#39;area&#39;)</span>
         <span class="n">_</span><span class="p">,</span> <span class="n">mask</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">read_region_with_annotation</span><span class="p">(</span>
@@ -529,7 +574,8 @@
 
 <span class="sd">        Returns</span>
 <span class="sd">        -------</span>
-<span class="sd">        Image region or patch (as PIL RGBA image).</span>
+<span class="sd">        Image region or patch as PIL RGBA image plus annotation mask as 2D</span>
+<span class="sd">        Numpy array.</span>
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="mi">0</span> <span class="o">&lt;</span> <span class="n">min_class_area_ratio</span> <span class="o">&lt;=</span> <span class="mi">1</span><span class="p">:</span>
