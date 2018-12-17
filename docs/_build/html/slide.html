@@ -46,7 +46,7 @@
 <span id="slide"></span><h1>Slide<a class="headerlink" href="#module-slide" title="Permalink to this headline">¶</a></h1>
 <dl class="class">
 <dt id="slide.Slide">
-<em class="property">class </em><code class="descclassname">slide.</code><code class="descname">Slide</code><span class="sig-paren">(</span><em>filename</em>, <em>annotation_filename=None</em>, <em>data_source=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#Slide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.Slide" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">slide.</code><code class="descname">Slide</code><span class="sig-paren">(</span><em>filename</em>, <em>annotation_filename=None</em>, <em>xml_style=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/slide.html#Slide"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#slide.Slide" title="Permalink to this definition">¶</a></dt>
 <dd><p>An open WSI, with or without annotations.</p>
 <p>Added functionality to OpenSlide WSI instances, optionally with
 annotations.</p>
@@ -62,7 +62,7 @@ annotations.</p>
 <dt><strong>annotation_filename: str</strong></dt>
 <dd><p class="first last">Path to XML annotation file. Namesake argument to <cite>AnnotatedOpenSlide</cite>.</p>
 </dd>
-<dt><strong>data_source: str</strong></dt>
+<dt><strong>xml_style: str</strong></dt>
 <dd><p class="first last">The computational histology challenge releasing the dataset. Namesake
 argument to <cite>AnnotatedOpenSlide</cite>.</p>
 </dd>
@@ -73,7 +73,7 @@ argument to <cite>AnnotatedOpenSlide</cite>.</p>
 </table>
 <p class="rubric">Examples</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">wsipre</span> <span class="k">import</span> <span class="n">slide</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">wsi</span> <span class="o">=</span> <span class="n">slide</span><span class="o">.</span><span class="n">Slide</span><span class="p">(</span><span class="s1">&#39;tumor_001.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;tumor_001.xml&#39;</span><span class="p">,</span> <span class="s1">&#39;camelyon&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">wsi</span> <span class="o">=</span> <span class="n">slide</span><span class="o">.</span><span class="n">Slide</span><span class="p">(</span><span class="s1">&#39;tumor_001.tif&#39;</span><span class="p">,</span> <span class="s1">&#39;tumor_001.xml&#39;</span><span class="p">,</span> <span class="s1">&#39;asap&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">wsi</span><span class="o">.</span><span class="n">label_map</span>
 <span class="go">{&#39;_0&#39;: 2, &#39;_1&#39;: 2, &#39;_2&#39;: 1}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">wsi</span><span class="o">.</span><span class="n">level_count</span>

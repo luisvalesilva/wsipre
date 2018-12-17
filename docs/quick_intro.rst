@@ -17,7 +17,7 @@ Load WSI form the CAMELYON challenge with its region-level tumor annotation. ::
 
     >>> wsi = slide.Slide(filename='patient_012_node_0.tif',
     ...                   annotation_filename='patient_012_node_0.xml',
-    ...                   data_source='camelyon')
+    ...                   xml_style='asap')
 
 Generate and show a thumbnail. ::
 

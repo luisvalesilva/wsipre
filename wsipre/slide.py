@@ -29,9 +29,10 @@ class _AnnotatedOpenSlide(openslide.OpenSlide):
         Path to slide file.
     annotation_filename: str
         Path to XML annotation file.
-    data_source: str
-        The computational histology challenge releasing the dataset:
-        * 'camelyon': CAMELYON grand challenges in pathology.
+    xml_style: str
+        The annotation XML style. Typically associated with a computational
+        histology challenge releasing the dataset.
+        * 'asap': CAMELYON grand challenges in pathology.
         * 'bach': BACH Grand Challenge on Breast Cancer Histology Images.
 
     Attributes
@@ -50,17 +51,17 @@ class _AnnotatedOpenSlide(openslide.OpenSlide):
 
     """
 
-    def __init__(self, filename, annotation_filename, data_source):
+    def __init__(self, filename, annotation_filename, xml_style):
         openslide.OpenSlide.__init__(self, filename)
         self.filename = filename  # Useful to name predicted annotations
         self.annotation_filename = annotation_filename
-        self.data_source = data_source
+        self.xml_style = xml_style
         self.polygons = None
         self.label_map = None
 
         if self.annotation_filename is not None:
-            if self.data_source == 'camelyon':
-                self.polygons, self.labels = reader.camelyon_annotations(
+            if self.xml_style == 'asap':
+                self.polygons, self.labels = reader.asap_annotations(
                     self.annotation_filename)
                 # CAMELYON17 data
                 if 'metastases' in self.labels:
@@ -71,7 +72,7 @@ class _AnnotatedOpenSlide(openslide.OpenSlide):
                     self.label_map = {'_0': 2, '_1': 2, '_2': 1}
                 else:  # Predicted annotations
                     self.label_map = {'predicted_tumor': 1}
-            elif self.data_source == 'bach':
+            elif self.xml_style == 'bach':
                 # Value 1 is reserved for 'normal' tissue annotations
                 self.label_map = {'Benign': 2, 'Carcinoma in situ': 3,
                                   'Invasive carcinoma': 4}
@@ -79,10 +80,10 @@ class _AnnotatedOpenSlide(openslide.OpenSlide):
                     self.annotation_filename)
             else:
                 raise ValueError(
-                    '"data_source" value must be either "camelyon" or "bach".')
+                    '"xml_style" value must be either "asap" or "bach".')
         else:
-            if self.data_source is not None:
-                warnings.warn('"data_source" is only used if an ' +
+            if self.xml_style is not None:
+                warnings.warn('"xml_style" is only used if an ' +
                               '"annotation_filename" is provided.')
 
 
@@ -99,7 +100,7 @@ class Slide(_AnnotatedOpenSlide):
         `AnnotatedOpenSlide`.
     annotation_filename: str
         Path to XML annotation file. Namesake argument to `AnnotatedOpenSlide`.
-    data_source: str
+    xml_style: str
         The computational histology challenge releasing the dataset. Namesake
         argument to `AnnotatedOpenSlide`.
 
@@ -118,7 +119,7 @@ class Slide(_AnnotatedOpenSlide):
     Examples
     --------
     >>> from wsipre import slide
-    >>> wsi = slide.Slide('tumor_001.tif', 'tumor_001.xml', 'camelyon')
+    >>> wsi = slide.Slide('tumor_001.tif', 'tumor_001.xml', 'asap')
     >>> wsi.label_map
     {'_0': 2, '_1': 2, '_2': 1}
     >>> wsi.level_count
@@ -134,7 +135,7 @@ class Slide(_AnnotatedOpenSlide):
 
     """
 
-    def __init__(self, filename, annotation_filename=None, data_source=None):
+    def __init__(self, filename, annotation_filename=None, xml_style=None):
         self.tissue_mask = None
         self.tissue_label_map = None
         self.downsampling_factor = None
@@ -149,13 +150,13 @@ class Slide(_AnnotatedOpenSlide):
                 'to update to a more recent version.')
 
         if annotation_filename is None:
-            if data_source is not None:
+            if xml_style is not None:
                 warnings.warn(
-                    '"data_source" is not used (no annotation was provided).')
+                    '"xml_style" is not used (no annotation was provided).')
             openslide.OpenSlide.__init__(self, filename)
         else:
             _AnnotatedOpenSlide.__init__(
-                self, filename, annotation_filename, data_source)
+                self, filename, annotation_filename, xml_style)
 
     def _draw_polygons(self, mask, polygons, polygon_type,
                        line_thickness=None):

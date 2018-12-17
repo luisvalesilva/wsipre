@@ -10,11 +10,12 @@ Functionality to read whole-slide image (WSI) annotations (from XML files).
 from xml.dom import minidom
 
 
-def camelyon_annotations(xml_file):
-    """Get annotations in XML file from the CAMELYON challenge.
+def asap_annotations(xml_file):
+    """Get annotations from XML file in the ASAP style.
 
     Collects region annotations bounded by polygonal contours from an XML
-    annotation file, along with their labels.
+    annotation file in the ASAP style (popularized by the CAMELYON challenge),
+    along with their labels.
 
     Parameters
     ----------

@@ -72,9 +72,10 @@
 <span class="sd">        Path to slide file.</span>
 <span class="sd">    annotation_filename: str</span>
 <span class="sd">        Path to XML annotation file.</span>
-<span class="sd">    data_source: str</span>
-<span class="sd">        The computational histology challenge releasing the dataset:</span>
-<span class="sd">        * &#39;camelyon&#39;: CAMELYON grand challenges in pathology.</span>
+<span class="sd">    xml_style: str</span>
+<span class="sd">        The annotation XML style. Typically associated with a computational</span>
+<span class="sd">        histology challenge releasing the dataset.</span>
+<span class="sd">        * &#39;asap&#39;: CAMELYON grand challenges in pathology.</span>
 <span class="sd">        * &#39;bach&#39;: BACH Grand Challenge on Breast Cancer Histology Images.</span>
 
 <span class="sd">    Attributes</span>
@@ -93,17 +94,17 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">annotation_filename</span><span class="p">,</span> <span class="n">data_source</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">annotation_filename</span><span class="p">,</span> <span class="n">xml_style</span><span class="p">):</span>
         <span class="n">openslide</span><span class="o">.</span><span class="n">OpenSlide</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">filename</span> <span class="o">=</span> <span class="n">filename</span>  <span class="c1"># Useful to name predicted annotations</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">annotation_filename</span> <span class="o">=</span> <span class="n">annotation_filename</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="o">=</span> <span class="n">data_source</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">xml_style</span> <span class="o">=</span> <span class="n">xml_style</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">polygons</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">annotation_filename</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="o">==</span> <span class="s1">&#39;camelyon&#39;</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">polygons</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">camelyon_annotations</span><span class="p">(</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xml_style</span> <span class="o">==</span> <span class="s1">&#39;asap&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">polygons</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span> <span class="o">=</span> <span class="n">reader</span><span class="o">.</span><span class="n">asap_annotations</span><span class="p">(</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">annotation_filename</span><span class="p">)</span>
                 <span class="c1"># CAMELYON17 data</span>
                 <span class="k">if</span> <span class="s1">&#39;metastases&#39;</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">labels</span><span class="p">:</span>
@@ -114,7 +115,7 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;_0&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;_1&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;_2&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
                 <span class="k">else</span><span class="p">:</span>  <span class="c1"># Predicted annotations</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;predicted_tumor&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="o">==</span> <span class="s1">&#39;bach&#39;</span><span class="p">:</span>
+            <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">xml_style</span> <span class="o">==</span> <span class="s1">&#39;bach&#39;</span><span class="p">:</span>
                 <span class="c1"># Value 1 is reserved for &#39;normal&#39; tissue annotations</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">label_map</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;Benign&#39;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">&#39;Carcinoma in situ&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
                                   <span class="s1">&#39;Invasive carcinoma&#39;</span><span class="p">:</span> <span class="mi">4</span><span class="p">}</span>
@@ -122,10 +123,10 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">annotation_filename</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                    <span class="s1">&#39;&quot;data_source&quot; value must be either &quot;camelyon&quot; or &quot;bach&quot;.&#39;</span><span class="p">)</span>
+                    <span class="s1">&#39;&quot;xml_style&quot; value must be either &quot;asap&quot; or &quot;bach&quot;.&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">data_source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;&quot;data_source&quot; is only used if an &#39;</span> <span class="o">+</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">xml_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s1">&#39;&quot;xml_style&quot; is only used if an &#39;</span> <span class="o">+</span>
                               <span class="s1">&#39;&quot;annotation_filename&quot; is provided.&#39;</span><span class="p">)</span>
 
 
@@ -142,7 +143,7 @@
 <span class="sd">        `AnnotatedOpenSlide`.</span>
 <span class="sd">    annotation_filename: str</span>
 <span class="sd">        Path to XML annotation file. Namesake argument to `AnnotatedOpenSlide`.</span>
-<span class="sd">    data_source: str</span>
+<span class="sd">    xml_style: str</span>
 <span class="sd">        The computational histology challenge releasing the dataset. Namesake</span>
 <span class="sd">        argument to `AnnotatedOpenSlide`.</span>
 
@@ -161,7 +162,7 @@
 <span class="sd">    Examples</span>
 <span class="sd">    --------</span>
 <span class="sd">    &gt;&gt;&gt; from wsipre import slide</span>
-<span class="sd">    &gt;&gt;&gt; wsi = slide.Slide(&#39;tumor_001.tif&#39;, &#39;tumor_001.xml&#39;, &#39;camelyon&#39;)</span>
+<span class="sd">    &gt;&gt;&gt; wsi = slide.Slide(&#39;tumor_001.tif&#39;, &#39;tumor_001.xml&#39;, &#39;asap&#39;)</span>
 <span class="sd">    &gt;&gt;&gt; wsi.label_map</span>
 <span class="sd">    {&#39;_0&#39;: 2, &#39;_1&#39;: 2, &#39;_2&#39;: 1}</span>
 <span class="sd">    &gt;&gt;&gt; wsi.level_count</span>
@@ -177,7 +178,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">annotation_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">data_source</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">annotation_filename</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">xml_style</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tissue_mask</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tissue_label_map</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">downsampling_factor</span> <span class="o">=</span> <span class="kc">None</span>
@@ -192,13 +193,13 @@
                 <span class="s1">&#39;to update to a more recent version.&#39;</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">annotation_filename</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">data_source</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">xml_style</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-                    <span class="s1">&#39;&quot;data_source&quot; is not used (no annotation was provided).&#39;</span><span class="p">)</span>
+                    <span class="s1">&#39;&quot;xml_style&quot; is not used (no annotation was provided).&#39;</span><span class="p">)</span>
             <span class="n">openslide</span><span class="o">.</span><span class="n">OpenSlide</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">_AnnotatedOpenSlide</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-                <span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">annotation_filename</span><span class="p">,</span> <span class="n">data_source</span><span class="p">)</span>
+                <span class="bp">self</span><span class="p">,</span> <span class="n">filename</span><span class="p">,</span> <span class="n">annotation_filename</span><span class="p">,</span> <span class="n">xml_style</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_draw_polygons</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">polygons</span><span class="p">,</span> <span class="n">polygon_type</span><span class="p">,</span>
                        <span class="n">line_thickness</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
