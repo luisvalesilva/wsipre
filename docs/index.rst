@@ -11,11 +11,14 @@ conserves OpenSlide Python's API and extends it to handle WSI annotations and
 to perform processing tasks. The underlying objective is the preparation of
 WSIs for Machine Learning (particularly Deep Learning).
 
-You may also want to check out `py-wsi`_, a different Python package providing
-overlapping functionality.
+Other Python projects providing overlapping functionality (non-exhaustive list):
+
+* `py-wsi`_
+* `WholeSlideImageSampler`_
 
 .. _virtual slides: https://en.wikipedia.org/wiki/Virtual_slide
 .. _py-wsi: https://github.com/ysbecca/py-wsi/ 
+.. _WholeSlideImageSampler: https://github.com/jgamper/WholeSlideImageSampler 
 
 User guide
 ==========
