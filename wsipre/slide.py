@@ -360,7 +360,7 @@ class Slide(_AnnotatedOpenSlide):
         # effectively excludes tissue above and to the left of annotations
         # Fix it by offsetting coordinates: convert to center pixel position
         # (subtract half of patch size from x and y coordinates)
-        half_size = [x * self.level_downsamples[level] / 2 for x in size]
+        half_size = [int(x * self.level_downsamples[level] / 2) for x in size]
         row_location = coordinates[0] - half_size[0]
         col_location = coordinates[1] - half_size[1]
 
