@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="wsipre",
-    version="0.0.4",
+    version="0.1.0",
     author="Luis A. Vale Silva",
     author_email="luisvalesilva@gmail.com",
     description="Whole-slide image preprocessing",
