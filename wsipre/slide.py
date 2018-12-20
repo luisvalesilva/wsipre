@@ -520,7 +520,7 @@ class Slide(_AnnotatedOpenSlide):
         target_class: int
             The class annotation of the central pixel of the patch.
             function.
-        min_class_area_ratio: float (0, 1]
+        min_class_area_ratio: float [0, 1]
             Minimum ratio of target class pixels to total pixels.
         polygon_type: str
             Type of polygon drawing:
@@ -536,9 +536,9 @@ class Slide(_AnnotatedOpenSlide):
         Numpy array.
 
         """
-        if not 0 < min_class_area_ratio <= 1:
+        if not 0 <= min_class_area_ratio <= 1:
             raise ValueError(
-                '"min_class_area_ratio" must be in the interval (0, 1].')
+                '"min_class_area_ratio" must be in the interval [0, 1].')
 
         coordinates, area_ratio = self._pick_random_coordinates(
             level, size, target_class)
