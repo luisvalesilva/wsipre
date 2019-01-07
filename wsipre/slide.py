@@ -59,6 +59,10 @@ class _AnnotatedOpenSlide(openslide.OpenSlide):
         self.polygons = None
         self.label_map = None
 
+        # Label annotations as:
+        #   1: Normal tissue
+        #   2: Tumor tissue
+        # 0 is automatically assigned to all unannotated pixels
         if self.annotation_filename is not None:
             if self.xml_style == 'asap':
                 self.polygons, self.labels = reader.asap_annotations(
@@ -70,6 +74,8 @@ class _AnnotatedOpenSlide(openslide.OpenSlide):
                 # CAMELYON16 data
                 elif '_0' in self.labels or '_1' in self.labels:
                     self.label_map = {'_0': 2, '_1': 2, '_2': 1}
+                elif 'Tumor' in self.labels or 'Exclusion' in self.labels:
+                    self.label_map = {'Tumor': 2, 'Exclusion': 1}
                 else:  # Predicted annotations
                     self.label_map = {'predicted_tumor': 1}
             elif self.xml_style == 'bach':
