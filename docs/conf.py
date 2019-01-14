@@ -55,7 +55,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'wsipre'
-copyright = '2018, Luis A. Vale Silva'
+copyright = '2019, Luis A. Vale Silva'
 author = 'Luis A. Vale Silva'
 
 # The version info for the project you're documenting, acts as replacement for
